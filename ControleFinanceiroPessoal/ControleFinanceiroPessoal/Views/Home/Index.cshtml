@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Página Inicial";
+}
+
+<!-- Área Principal com Gráficos e Dados -->
+<div class="col-md-9 mt-5">
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Gráfico de Receitas e Despesas -->
+            <canvas id="graficoSaldo" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var ctx = document.getElementById('graficoSaldo').getContext('2d');
+        var graficoSaldo = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Receitas', 'Despesas'],
+                datasets: [{
+                    label: 'Saldo Total',
+                    data: [@ViewBag.TotalReceitas, @ViewBag.TotalDespesas], // Certifique-se de que essas variáveis estão sendo passadas corretamente do controller
+                    backgroundColor: ['green', 'red'],
+                    borderColor: ['green', 'red'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}
+

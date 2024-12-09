@@ -1,0 +1,83 @@
+﻿@model ControleFinanceiroPessoal.Models.CategoriaInvestimento
+
+@{
+    ViewData["Title"] = "Nova Categoria de Investimento";
+}
+
+<div class="container mt-5">
+    <!-- Título Principal -->
+    <div class="row mb-4 text-center">
+        <h1 class="display-4 text-success fw-bold">Nova Categoria de Investimento</h1>
+        <p class="lead text-muted">Selecione a categoria e preencha os detalhes para cadastrar seu investimento.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 p-4 bg-white shadow-sm rounded">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Campo Tipo de Categoria -->
+                <div class="form-floating mb-4">
+                    <select asp-for="TipoCategoria" class="form-select" id="tipoCategoria" required>
+                        <option value="">Selecione uma Categoria</option>
+                        <option value="Renda Fixa">Renda Fixa</option>
+                        <option value="Renda Variável">Renda Variável</option>
+                    </select>
+                    <label asp-for="TipoCategoria">Tipo de Categoria</label>
+                    <span asp-validation-for="TipoCategoria" class="text-danger"></span>
+                </div>
+
+                <!-- Campo Nome do Investimento -->
+                <div class="form-floating mb-4">
+                    <input asp-for="NomeInvestimento" class="form-control" id="nomeInvestimento" placeholder="Nome do Investimento" required />
+                    <label asp-for="NomeInvestimento">Nome do Investimento</label>
+                    <span asp-validation-for="NomeInvestimento" class="text-danger"></span>
+                </div>
+
+                <!-- Checkbox Taxa de Juros -->
+                <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" asp-for="TaxaJuros" id="taxaJurosSwitch" />
+                    <label class="form-check-label fw-bold" for="taxaJurosSwitch">Aplicar Taxa de Juros?</label>
+                </div>
+
+                <!-- Campo Juros Anual -->
+                <div class="form-floating mb-4" id="jurosAnualDiv" style="display:none;">
+                    <input asp-for="JurosAnual" class="form-control" id="jurosAnual" placeholder="Juros Anual (%)" />
+                    <label asp-for="JurosAnual">Juros Anual (%)</label>
+                    <span asp-validation-for="JurosAnual" class="text-danger"></span>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-arrow-left"></i> Voltar para a Lista
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg fw-bold">
+                        <i class="fas fa-save"></i> Salvar Categoria
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Mostrar ou Ocultar o Campo de Juros Anual
+        document.getElementById("taxaJurosSwitch").addEventListener("change", function () {
+            const jurosAnualDiv = document.getElementById("jurosAnualDiv");
+            const jurosAnual = document.getElementById("jurosAnual");
+
+            if (this.checked) {
+                jurosAnualDiv.style.display = "block";
+            } else {
+                jurosAnualDiv.style.display = "none";
+                jurosAnual.value = "";
+            }
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

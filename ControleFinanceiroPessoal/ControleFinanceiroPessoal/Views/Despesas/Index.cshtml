@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ControleFinanceiroPessoal.Models.Despesa>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataPagamento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContaFinanceira)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormaPagamento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PagamentoRealizado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recorrente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Intervalo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroParcelas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParcelasRestantes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataVencimento)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataPagamento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContaFinanceira.IdContaFinanceira)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormaPagamento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PagamentoRealizado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recorrente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Intervalo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroParcelas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParcelasRestantes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataVencimento)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdDespesa">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdDespesa">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdDespesa">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

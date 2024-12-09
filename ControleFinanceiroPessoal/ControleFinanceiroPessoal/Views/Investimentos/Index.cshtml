@@ -1,0 +1,134 @@
+﻿@model IEnumerable<ControleFinanceiroPessoal.Models.Investimento>
+
+@{
+    ViewData["Title"] = "Gestão de Investimentos";
+}
+
+<div class="container-fluid mt-5 px-5">
+    <!-- Título Principal -->
+    <div class="row mb-5 text-center">
+        <h1 class="display-4 text-success fw-bold">Gestão de Investimentos</h1>
+        <p class="lead text-muted">Gerencie, visualize e mantenha controle total de seus investimentos.</p>
+    </div>
+
+    <!-- Seção de Pesquisa e Filtros -->
+    <div class="row mb-4 p-4 bg-white shadow-sm rounded border">
+        <div class="col-md-12 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <label class="form-label fw-bold me-3 text-muted">Filtrar por:</label>
+                <select class="form-select form-select-lg me-3" id="filterCriteria" style="max-width: 220px;">
+                    <option value="id">ID</option>
+                    <option value="categoria">Categoria</option>
+                    <option value="nomeInvestimento">Nome do Investimento</option>
+                </select>
+                <input type="text" class="form-control form-control-lg me-3" id="searchInvestments" placeholder="Pesquisar..." style="width: 600px;">
+            </div>
+            <button class="btn btn-success btn-lg shadow-sm" id="searchButton">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+            <a asp-action="Create" class="btn btn-primary btn-lg fw-bold ms-3 shadow-sm">
+                <i class="fas fa-plus-circle"></i> Novo Investimento
+            </a>
+        </div>
+    </div>
+
+    <!-- Tabela de Investimentos -->
+    <div class="table-responsive mt-4">
+        <table class="table table-hover table-bordered table-striped shadow-sm rounded">
+            <thead class="bg-success text-white">
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Categoria</th>
+                    <th class="text-center">Nome do Investimento</th>
+                    <th class="text-center">Descrição</th>
+                    <th class="text-center">Valor Investido (R$)</th>
+                    <th class="text-center">Juros Anual (%)</th>
+                    <th class="text-center">Valor Futuro (R$)</th>
+                    <th class="text-center">Data do Investimento</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="align-middle">
+                        <td class="text-center fw-bold">@item.IdInvestimento</td>
+                        <td class="text-center">@item.CategoriaInvestimento?.TipoCategoria ?? "N/A"</td>
+                        <td class="text-center">@item.CategoriaInvestimento?.NomeInvestimento ?? "N/A"</td>
+                        <td class="text-center">@item.Descricao ?? "N/A"</td>
+                        <td class="text-center text-success fw-bold">R$ @item.ValorInvestido.ToString("N2")</td>
+                        <td class="text-center">@item.CategoriaInvestimento?.JurosAnual?.ToString("N2") ?? "N/A"</td>
+                        <td class="text-center text-success">R$ @(item.ValorFuturo?.ToString("N2") ?? "N/A")</td>
+                        <td class="text-center">@item.DataInvestimento.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.IdInvestimento" class="btn btn-success btn-sm me-2" data-bs-toggle="tooltip" title="Editar">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.IdInvestimento" class="btn btn-info btn-sm me-2" data-bs-toggle="tooltip" title="Detalhes">
+                                <i class="fas fa-info-circle"></i> Detalhes
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.IdInvestimento" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" title="Excluir">
+                                <i class="fas fa-trash-alt"></i> Excluir
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginação Melhorada -->
+    <div class="row mt-4">
+        <div class="col text-center">
+            <ul class="pagination pagination-lg justify-content-center">
+                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Próximo</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Script de Pesquisa -->
+@section Scripts {
+    <script>
+        document.getElementById('searchButton').addEventListener('click', function () {
+            var searchQuery = document.getElementById('searchInvestments').value;
+            var selectedCriteria = document.getElementById('filterCriteria').value;
+
+            fetch(`/Investimentos/Search?criteria=${selectedCriteria}&query=${searchQuery}`)
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.querySelector('tbody');
+                    tableBody.innerHTML = '';
+                    data.forEach(item => {
+                        let row = `<tr>
+                            <td class="text-center fw-bold">${item.idInvestimento}</td>
+                            <td class="text-center">${item.categoriaInvestimento?.tipoCategoria ?? "N/A"}</td>
+                            <td class="text-center">${item.categoriaInvestimento?.nomeInvestimento ?? "N/A"}</td>
+                            <td class="text-center">${item.descricao ?? "N/A"}</td>
+                            <td class="text-center text-success fw-bold">R$ ${item.valorInvestido.toFixed(2)}</td>
+                            <td class="text-center">${item.categoriaInvestimento?.jurosAnual?.toFixed(2) ?? "N/A"}</td>
+                            <td class="text-center text-success">R$ ${item.valorFuturo?.toFixed(2) ?? "N/A"}</td>
+                            <td class="text-center">${new Date(item.dataInvestimento).toLocaleDateString()}</td>
+                            <td class="text-center">
+                                <a href="/Investimentos/Edit/${item.idInvestimento}" class="btn btn-success btn-sm me-2">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a href="/Investimentos/Details/${item.idInvestimento}" class="btn btn-info btn-sm me-2">
+                                    <i class="fas fa-info-circle"></i> Detalhes
+                                </a>
+                                <a href="/Investimentos/Delete/${item.idInvestimento}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Excluir
+                                </a>
+                            </td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+}
